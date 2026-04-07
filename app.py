@@ -7,7 +7,7 @@ app = Flask(__name__)
 CORS(app)
 
 # CONEXIÓN A MONGO (Usa tu URL de Railway)
-MONGO_URL = "mongodb://mongo:pYkvNafdiRhIxwWkckgLmnYsqmcubklP@mongodb.railway.internal:27017" 
+MONGO_URL = "mongodb://mongo:pYkvNafdiRhIxwWkckgLmnYsqmcubklP@maglev.proxy.rlwy.net:38868" 
 client = MongoClient(MONGO_URL)
 db = client.test
 usuarios_col = db.usuarios
