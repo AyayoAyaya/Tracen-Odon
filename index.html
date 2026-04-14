@@ -3,98 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tracen-Odon | Registro de Capacitación</title>
+    <title>Capacitación Dobot</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex items-center justify-center font-sans">
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans flex items-center justify-center p-4">
 
-    <div class="max-w-md w-full p-8 bg-slate-800 rounded-2xl shadow-2xl border border-slate-700 mx-4">
-        <div class="text-center mb-8">
-            <div class="bg-blue-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/50">
-                <i class="fas fa-robot text-2xl text-white"></i>
-            </div>
-            <h1 class="text-3xl font-bold tracking-tight">Tracen-Odon</h1>
-            <p class="text-slate-400 mt-2">Sistema de Gestión de Usuarios</p>
-        </div>
-
-        <div class="space-y-6">
-            <div>
-                <label class="block text-sm font-medium mb-2">Nombre de Usuario</label>
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">
-                        <i class="fas fa-user"></i>
-                    </span>
-                    <input id="user" type="text" placeholder="Ej: Octane_Main" 
-                        class="w-full pl-10 pr-4 py-3 bg-slate-900 border border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-slate-600">
-                </div>
-            </div>
-
-            <div>
-                <label class="block text-sm font-medium mb-2">Contraseña</label>
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">
-                        <i class="fas fa-lock"></i>
-                    </span>
-                    <input id="pass" type="password" placeholder="••••••••" 
-                        class="w-full pl-10 pr-4 py-3 bg-slate-900 border border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-slate-600">
-                </div>
-            </div>
-
-            <div class="flex gap-4">
-                <button onclick="enviar('registrar')" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition-colors shadow-lg shadow-blue-900/20 active:scale-95">
-                    Registrar
-                </button>
-                <button onclick="enviar('login')" class="flex-1 bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 rounded-xl transition-colors active:scale-95">
-                    Entrar
-                </button>
-            </div>
-        </div>
-
-        <div id="mensaje" class="mt-6 text-center text-sm font-medium p-3 rounded-lg hidden"></div>
+    <div id="app-container" class="max-w-4xl w-full">
         
-        <footer class="mt-8 text-center text-slate-500 text-xs uppercase tracking-widest">
-            Proyecto Universitario &copy; 2026
-        </footer>
+        <div id="view-login" class="max-w-md mx-auto bg-slate-800 p-8 rounded-2xl shadow-2xl border border-slate-700">
+            <h2 class="text-3xl font-bold text-center mb-6 text-blue-400">Capacitación Dobot</h2>
+            <div class="space-y-4">
+                <input id="login-user" type="text" placeholder="Usuario" class="w-full p-3 bg-slate-900 border border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
+                <input id="login-pass" type="password" placeholder="Contraseña" class="w-full p-3 bg-slate-900 border border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
+                <button onclick="login()" class="w-full bg-blue-600 hover:bg-blue-700 py-3 rounded-xl font-bold transition-all">Ingresar</button>
+                <p class="text-center text-sm text-slate-400">¿No tienes una cuenta? <button onclick="showView('view-register')" class="text-blue-400 hover:underline">Crea Una</button></p>
+            </div>
+        </div>
+
+        <div id="view-register" class="hidden max-w-md mx-auto bg-slate-800 p-8 rounded-2xl shadow-2xl border border-slate-700">
+            <h2 class="text-2xl font-bold text-center mb-6">Registrarse</h2>
+            <div class="space-y-4">
+                <input id="reg-user" type="text" placeholder="Usuario" class="w-full p-3 bg-slate-900 border border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
+                <input id="reg-pass" type="password" placeholder="Contraseña" class="w-full p-3 bg-slate-900 border border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
+                <input id="reg-pass2" type="password" placeholder="Repetir Contraseña" class="w-full p-3 bg-slate-900 border border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
+                
+                <div class="text-xs text-slate-400 space-y-1 px-1">
+                    <p id="req-len">• Mínimo 8 caracteres</p>
+                    <p id="req-spec">• Al menos un carácter especial (@$!%*?&)</p>
+                </div>
+
+                <button onclick="register()" class="w-full bg-green-600 hover:bg-green-700 py-3 rounded-xl font-bold transition-all">Crear Cuenta</button>
+                <button onclick="showView('view-login')" class="w-full text-slate-400 text-sm hover:underline">Volver al Login</button>
+            </div>
+        </div>
+
+        <div id="view-courses" class="hidden">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-bold">Cursos Disponibles</h2>
+                <button onclick="showView('view-login')" class="bg-red-900/30 text-red-400 px-4 py-2 rounded-lg hover:bg-red-900/50">Salir</button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 hover:border-blue-500 transition-all cursor-pointer group">
+                    <div class="w-12 h-12 bg-blue-600/20 rounded-lg flex items-center justify-center mb-4 group-hover:bg-blue-600 transition-colors">
+                        <i class="fas fa-microchip text-blue-400 group-hover:text-white"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-2">Intro a Dobot</h3>
+                    <p class="text-slate-400 text-sm">Aprende los movimientos básicos del brazo robótico.</p>
+                </div>
+                <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 opacity-50">
+                    <h3 class="font-bold text-xl mb-2">Python Avanzado</h3>
+                    <p class="text-slate-400 text-sm">Proximamente...</p>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        // --- ⚠️ REEMPLAZA ESTO CON TU LINK DE RAILWAY ⚠️ ---
-        const BASE_URL = "https://tracen-odon-production.up.railway.app";
+        const BASE_URL = "https://tu-url-de-railway.app"; // CAMBIA ESTO
 
-        async function enviar(ruta) {
-            const user = document.getElementById('user').value;
-            const pass = document.getElementById('pass').value;
-            const msjBox = document.getElementById('mensaje');
-
-            if(!user || !pass) {
-                mostrarMensaje("Faltan datos", "bg-red-900/50 text-red-300");
-                return;
-            }
-
-            try {
-                const res = await fetch(`${BASE_URL}/${ruta}`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({user, pass})
-                });
-                const data = await res.json();
-                
-                if(data.status === "success") {
-                    mostrarMensaje(data.mensaje, "bg-green-900/50 text-green-300 border border-green-800");
-                } else {
-                    mostrarMensaje(data.mensaje, "bg-red-900/50 text-red-300 border border-red-800");
-                }
-            } catch (err) {
-                mostrarMensaje("Servidor apagado o error de red", "bg-amber-900/50 text-amber-300");
-            }
+        function showView(viewId) {
+            document.getElementById('view-login').classList.add('hidden');
+            document.getElementById('view-register').classList.add('hidden');
+            document.getElementById('view-courses').classList.add('hidden');
+            document.getElementById(viewId).classList.remove('hidden');
         }
 
-        function mostrarMensaje(texto, clases) {
-            const msjBox = document.getElementById('mensaje');
-            msjBox.innerText = texto;
-            msjBox.className = "mt-6 text-center text-sm font-medium p-3 rounded-lg " + clases;
-            msjBox.classList.remove('hidden');
+        async function register() {
+            const user = document.getElementById('reg-user').value;
+            const p1 = document.getElementById('reg-pass').value;
+            const p2 = document.getElementById('reg-pass2').value;
+
+            if (p1 !== p2) return alert("Las contraseñas no coinciden");
+            
+            // Aquí llamarías a tu API de Railway
+            const res = await fetch(`${BASE_URL}/registrar`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({user, pass: p1})
+            });
+            const data = await res.json();
+            alert(data.mensaje);
+            if(data.status === "success") showView('view-login');
+        }
+
+        async function login() {
+            // Lógica similar para login... si tiene éxito:
+            // showView('view-courses');
+            alert("Simulación: Ingreso exitoso");
+            showView('view-courses');
         }
     </script>
 </body>
