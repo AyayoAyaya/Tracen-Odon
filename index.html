@@ -61,39 +61,90 @@
     </div>
 
     <script>
-        const BASE_URL = "https://tu-url-de-railway.app"; // CAMBIA ESTO
+        // --- CONFIGURACIÓN ---
+const BASE_URL = "https://tu-url-de-railway.app"; // Reemplaza con la tuya
 
-        function showView(viewId) {
-            document.getElementById('view-login').classList.add('hidden');
-            document.getElementById('view-register').classList.add('hidden');
-            document.getElementById('view-courses').classList.add('hidden');
-            document.getElementById(viewId).classList.remove('hidden');
+// Función para cambiar de "página" (vista)
+function showView(viewId) {
+    document.getElementById('view-login').classList.add('hidden');
+    document.getElementById('view-register').classList.add('hidden');
+    document.getElementById('view-courses').classList.add('hidden');
+    document.getElementById(viewId).classList.remove('hidden');
+    // Limpiamos mensajes al cambiar de vista
+    document.querySelectorAll('.mensaje-box').forEach(el => el.classList.add('hidden'));
+}
+
+// FUNCIÓN PARA LOGUEARSE (Ahora sí valida)
+async function login() {
+    const user = document.getElementById('login-user').value;
+    const pass = document.getElementById('login-pass').value;
+
+    if (!user || !pass) {
+        mostrarError('view-login', "Debes completar todos los campos");
+        return;
+    }
+
+    try {
+        const res = await fetch(`${BASE_URL}/login`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({user, pass})
+        });
+        const data = await res.json();
+
+        if (data.status === "success") {
+            showView('view-courses'); // Solo entra si el servidor dice OK
+        } else {
+            mostrarError('view-login', data.mensaje);
         }
+    } catch (err) {
+        mostrarError('view-login', "Error: El servidor no responde");
+    }
+}
 
-        async function register() {
-            const user = document.getElementById('reg-user').value;
-            const p1 = document.getElementById('reg-pass').value;
-            const p2 = document.getElementById('reg-pass2').value;
+// FUNCIÓN PARA REGISTRARSE
+async function register() {
+    const user = document.getElementById('reg-user').value;
+    const p1 = document.getElementById('reg-pass').value;
+    const p2 = document.getElementById('reg-pass2').value;
 
-            if (p1 !== p2) return alert("Las contraseñas no coinciden");
-            
-            // Aquí llamarías a tu API de Railway
-            const res = await fetch(`${BASE_URL}/registrar`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({user, pass: p1})
-            });
-            const data = await res.json();
-            alert(data.mensaje);
-            if(data.status === "success") showView('view-login');
+    if (p1 !== p2) {
+        mostrarError('view-register', "Las contraseñas no coinciden");
+        return;
+    }
+
+    try {
+        const res = await fetch(`${BASE_URL}/registrar`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({user, pass: p1})
+        });
+        const data = await res.json();
+
+        if (data.status === "success") {
+            // En lugar de alert, mostramos éxito y volvemos al login tras 2 segundos
+            mostrarExito('view-register', "¡Cuenta creada! Redirigiendo...");
+            setTimeout(() => showView('view-login'), 2000);
+        } else {
+            mostrarError('view-register', data.mensaje);
         }
+    } catch (err) {
+        mostrarError('view-register', "Error de conexión con el servidor");
+    }
+}
 
-        async function login() {
-            // Lógica similar para login... si tiene éxito:
-            // showView('view-courses');
-            alert("Simulación: Ingreso exitoso");
-            showView('view-courses');
-        }
+// Funciones para mostrar mensajes sin Pop-ups (usando el div de mensaje)
+function mostrarError(containerId, texto) {
+    const box = document.querySelector(`#${containerId} .mensaje-box`);
+    box.innerText = texto;
+    box.className = "mensaje-box mt-4 p-3 rounded-lg bg-red-900/50 text-red-300 text-sm border border-red-800";
+}
+
+function mostrarExito(containerId, texto) {
+    const box = document.querySelector(`#${containerId} .mensaje-box`);
+    box.innerText = texto;
+    box.className = "mensaje-box mt-4 p-3 rounded-lg bg-green-900/50 text-green-300 text-sm border border-green-800";
+}
     </script>
 </body>
 </html>
