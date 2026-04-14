@@ -1,8 +1,9 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from pymongo import MongoClient
-import bcrypt # <--- Nueva librería
+import bcrypt
 import os
+import re # <--- Importante: Librería para buscar símbolos (Regex)
 
 app = Flask(__name__)
 CORS(app)
@@ -16,19 +17,37 @@ usuarios_col = db.usuarios
 def registrar():
     datos = request.json
     user = datos.get('user')
-    password = datos.get('pass').encode('utf-8') # Convertir a bytes
+    password_raw = datos.get('pass') # La recibimos como texto primero para validar
 
-    # --- AQUÍ OCURRE LA MAGIA DEL HASH ---
+    # --- 1. VALIDACIONES DE TU BOCETO ---
+    
+    # Regla 1: Extensión mínima de 8 caracteres
+    if len(password_raw) < 8:
+        return jsonify({"status": "error", "mensaje": "La contraseña debe tener al menos 8 caracteres"})
+
+    # Regla 2: Que contenga caracteres especiales (@, $, !, %, etc.)
+    # Esta expresión regular busca si hay al menos un símbolo
+    if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password_raw):
+        return jsonify({"status": "error", "mensaje": "La contraseña debe incluir al menos un carácter especial"})
+
+    # --- 2. SI PASA LAS REGLAS, CREAMOS EL HASH ---
+    
+    password_bytes = password_raw.encode('utf-8')
     salt = bcrypt.gensalt()
-    hashed_password = bcrypt.hashpw(password, salt)
+    hashed_password = bcrypt.hashpw(password_bytes, salt)
 
-    # Guardamos el usuario con la clave ENCRIPTADA
+    # --- 3. GUARDAR EN MONGO ---
+    
+    # Opcional: Verificar si el usuario ya existe antes de crearlo
+    if usuarios_col.find_one({"user": user}):
+        return jsonify({"status": "error", "mensaje": "El nombre de usuario ya está ocupado"})
+
     usuarios_col.insert_one({
         "user": user, 
         "pass": hashed_password.decode('utf-8') 
     })
     
-    return jsonify({"status": "success", "mensaje": "Usuario creado con seguridad"})
+    return jsonify({"status": "success", "mensaje": "¡Usuario creado con éxito!"})
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -39,11 +58,10 @@ def login():
     user_found = usuarios_col.find_one({"user": u})
     
     if user_found:
-        # Comparamos la clave que puso el usuario con el HASH de la base de datos
         if bcrypt.checkpw(p, user_found['pass'].encode('utf-8')):
             return jsonify({"status": "success", "mensaje": "Acceso permitido"})
     
-    return jsonify({"status": "error", "mensaje": "Datos incorrectos"})
+    return jsonify({"status": "error", "mensaje": "Usuario o contraseña incorrectos"})
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
