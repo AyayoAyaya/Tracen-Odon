@@ -3,94 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Capacitación Dobot</title>
+    <title>Capacitación Dobot Magician | INACAP</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); }
+        .course-card:hover { transform: translateY(-5px); border-color: #3b82f6; }
+    </style>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen font-sans flex items-center justify-center p-4">
 
-    <div id="app-container" class="max-w-4xl w-full">
+    <div id="app" class="w-full max-w-5xl">
         
-        <div id="view-login" class="max-w-md mx-auto bg-slate-800 p-8 rounded-2xl shadow-2xl border border-slate-700">
-            <h2 class="text-3xl font-bold text-center mb-6 text-blue-400">Capacitación Dobot</h2>
-            <div class="space-y-4">
-                <input id="login-user" type="text" placeholder="Usuario" class="w-full p-3 bg-slate-900 border border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 text-white">
-                <input id="login-pass" type="password" placeholder="Contraseña" class="w-full p-3 bg-slate-900 border border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 text-white">
-                <button onclick="login()" class="w-full bg-blue-600 hover:bg-blue-700 py-3 rounded-xl font-bold transition-all active:scale-95">Ingresar</button>
-                <p class="text-center text-sm text-slate-400">¿No tienes una cuenta? <button onclick="showView('view-register')" class="text-blue-400 hover:underline">Crea Una</button></p>
-                
-                <div class="mensaje-box hidden"></div>
-            </div>
-        </div>
-
-        <div id="view-register" class="hidden max-w-md mx-auto bg-slate-800 p-8 rounded-2xl shadow-2xl border border-slate-700">
-            <h2 class="text-2xl font-bold text-center mb-6">Registrarse</h2>
-            <div class="space-y-4">
-                <input id="reg-user" type="text" placeholder="Usuario" class="w-full p-3 bg-slate-900 border border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 text-white">
-                <input id="reg-pass" type="password" placeholder="Contraseña" class="w-full p-3 bg-slate-900 border border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 text-white">
-                <input id="reg-pass2" type="password" placeholder="Repetir Contraseña" class="w-full p-3 bg-slate-900 border border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 text-white">
-                
-                <div class="text-xs text-slate-400 space-y-1 px-1">
-                    <p id="req-len">• Mínimo 8 caracteres</p>
-                    <p id="req-spec">• Al menos un carácter especial (@$!%*?&)</p>
+        <div id="view-login" class="max-w-md mx-auto space-y-6">
+            <div class="text-center">
+                <div class="bg-blue-600 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl rotate-3">
+                    <i class="fas fa-robot text-4xl text-white"></i>
                 </div>
+                <h1 class="text-4xl font-black tracking-tighter">DOBOT <span class="text-blue-500">LAB</span></h1>
+                <p class="text-slate-400">Acceso a Capacitación Técnica</p>
+            </div>
 
-                <button onclick="register()" class="w-full bg-green-600 hover:bg-green-700 py-3 rounded-xl font-bold transition-all active:scale-95">Crear Cuenta</button>
-                <button onclick="showView('view-login')" class="w-full text-slate-400 text-sm hover:underline">Volver al Login</button>
-                
-                <div class="mensaje-box hidden"></div>
+            <div class="bg-slate-800 p-8 rounded-3xl border border-slate-700 shadow-2xl">
+                <div class="space-y-4">
+                    <input id="l-user" type="text" placeholder="Usuario" class="w-full p-4 bg-slate-900 border border-slate-700 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500">
+                    <input id="l-pass" type="password" placeholder="Contraseña" class="w-full p-4 bg-slate-900 border border-slate-700 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500">
+                    <button onclick="handleLogin()" class="w-full bg-blue-600 hover:bg-blue-700 py-4 rounded-2xl font-bold text-lg transition-all active:scale-95 shadow-lg shadow-blue-900/20">Entrar</button>
+                    <p class="text-center text-sm text-slate-400 pt-2">¿Nuevo en el laboratorio? <button onclick="showView('view-register')" class="text-blue-400 font-bold hover:underline">Crea una cuenta</button></p>
+                    <div id="msg-login" class="hidden p-3 rounded-xl text-sm text-center"></div>
+                </div>
             </div>
         </div>
 
-        <div id="view-courses" class="hidden">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-3xl font-bold">Cursos Disponibles</h2>
-                <button onclick="showView('view-login')" class="bg-red-900/30 text-red-400 px-4 py-2 rounded-lg hover:bg-red-900/50 transition-colors">Salir</button>
+        <div id="view-register" class="hidden max-w-md mx-auto space-y-6">
+            <div class="text-center">
+                <h2 class="text-3xl font-bold">Nuevo Estudiante</h2>
+                <p class="text-slate-400 text-sm">Configura tus credenciales de acceso</p>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 hover:border-blue-500 transition-all cursor-pointer group">
-                    <div class="w-12 h-12 bg-blue-600/20 rounded-lg flex items-center justify-center mb-4 group-hover:bg-blue-600 transition-colors">
-                        <i class="fas fa-microchip text-blue-400 group-hover:text-white"></i>
+            <div class="bg-slate-800 p-8 rounded-3xl border border-slate-700 shadow-2xl">
+                <div class="space-y-4">
+                    <input id="r-user" type="text" placeholder="Usuario" class="w-full p-4 bg-slate-900 border border-slate-700 rounded-2xl outline-none">
+                    <input id="r-pass" type="password" placeholder="Contraseña" class="w-full p-4 bg-slate-900 border border-slate-700 rounded-2xl outline-none">
+                    <input id="r-pass2" type="password" placeholder="Confirmar Contraseña" class="w-full p-4 bg-slate-900 border border-slate-700 rounded-2xl outline-none">
+                    
+                    <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700">
+                        <p class="text-xs font-bold text-slate-500 uppercase mb-2">Seguridad requerida:</p>
+                        <ul class="text-xs space-y-1 text-slate-400">
+                            <li>• Mínimo 8 caracteres</li>
+                            <li>• Incluir carácter especial (@, #, !, etc)</li>
+                        </ul>
                     </div>
-                    <h3 class="font-bold text-xl mb-2">Intro a Dobot</h3>
-                    <p class="text-slate-400 text-sm">Aprende los movimientos básicos del brazo robótico.</p>
+
+                    <button onclick="handleRegister()" class="w-full bg-green-600 hover:bg-green-700 py-4 rounded-2xl font-bold transition-all active:scale-95">Registrar</button>
+                    <button onclick="showView('view-login')" class="w-full text-slate-500 text-sm font-medium">Cancelar</button>
+                    <div id="msg-reg" class="hidden p-3 rounded-xl text-sm text-center"></div>
                 </div>
-                <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 opacity-50">
-                    <h3 class="font-bold text-xl mb-2">Python Avanzado</h3>
-                    <p class="text-slate-400 text-sm">Proximamente...</p>
+            </div>
+        </div>
+
+        <div id="view-dashboard" class="hidden space-y-8">
+            <header class="flex flex-col md:flex-row justify-between items-center gap-4 bg-slate-800 p-6 rounded-3xl border border-slate-700">
+                <div>
+                    <h1 class="text-2xl font-bold">Panel de Capacitación</h1>
+                    <p class="text-blue-400 text-sm"><i class="fas fa-circle text-[10px] animate-pulse mr-2"></i>Conectado al servidor Railway</p>
                 </div>
+                <div class="flex items-center gap-4">
+                    <span id="display-user" class="font-mono text-slate-300 bg-slate-900 px-4 py-2 rounded-full border border-slate-700">usuario</span>
+                    <button onclick="showView('view-login')" class="bg-red-500/10 text-red-500 p-3 rounded-xl hover:bg-red-500 hover:text-white transition-all"><i class="fas fa-power-off"></i></button>
+                </div>
+            </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div onclick="openCourse('Módulo 1: Seguridad y Homing', 'Debes presionar el botón Unlock para mover el brazo manualmente. Al encender, el LED verde indica que el sistema está listo. El proceso de Homing es vital para calibrar los ejes X, Y, Z.')" 
+                     class="course-card bg-slate-800 p-6 rounded-3xl border border-slate-700 transition-all cursor-pointer group">
+                    <div class="w-14 h-14 bg-amber-500/20 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-amber-500 transition-all">
+                        <i class="fas fa-shield-alt text-amber-500 group-hover:text-white text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Seguridad y Homing</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Primeros pasos para no dañar los servomotores y calibrar el brazo.</p>
+                </div>
+
+                <div class="course-card bg-slate-800 p-6 rounded-3xl border border-slate-700 transition-all opacity-75">
+                    <div class="w-14 h-14 bg-blue-500/20 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-tools text-blue-500 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">End-Effectors</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Instalación de Ventosa, Gripper y Kit de Escritura según V1.7.0.</p>
+                    <span class="mt-4 inline-block text-[10px] bg-slate-900 px-2 py-1 rounded border border-slate-700 text-slate-500">BLOQUEADO</span>
+                </div>
+
+                <div class="course-card bg-slate-800 p-6 rounded-3xl border border-slate-700 transition-all opacity-75">
+                    <div class="w-14 h-14 bg-green-500/20 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fab fa-python text-green-500 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Control por Python</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Uso de la API para comandos PTP (Point-to-Point) y control de I/O.</p>
+                    <span class="mt-4 inline-block text-[10px] bg-slate-900 px-2 py-1 rounded border border-slate-700 text-slate-500">BLOQUEADO</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="course-modal" class="fixed inset-0 bg-slate-950/90 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-slate-800 max-w-2xl w-full rounded-3xl border border-slate-700 shadow-2xl overflow-hidden">
+            <div class="p-8 space-y-6">
+                <div class="flex justify-between items-start">
+                    <h2 id="modal-title" class="text-3xl font-bold text-blue-400">Título</h2>
+                    <button onclick="closeCourse()" class="text-slate-500 hover:text-white"><i class="fas fa-times text-xl"></i></button>
+                </div>
+                <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800">
+                    <p id="modal-body" class="text-slate-300 leading-relaxed italic">Cargando...</p>
+                </div>
+                <div class="p-4 bg-blue-600/10 rounded-xl border border-blue-500/30">
+                    <p class="text-xs text-blue-300"><i class="fas fa-info-circle mr-2"></i>Este contenido está basado en la Guía de Usuario Oficial del Dobot Magician.</p>
+                </div>
+                <button onclick="closeCourse()" class="w-full bg-slate-700 py-3 rounded-xl font-bold hover:bg-slate-600 transition-all">Marcar como leido</button>
             </div>
         </div>
     </div>
 
     <script>
-        // --- CAMBIA ESTO POR TU URL REAL DE RAILWAY ---
         const BASE_URL = "https://tracen-odon-production.up.railway.app";
 
         function showView(viewId) {
-            // Ocultar todas las vistas
             document.getElementById('view-login').classList.add('hidden');
             document.getElementById('view-register').classList.add('hidden');
-            document.getElementById('view-courses').classList.add('hidden');
-            
-            // Mostrar la seleccionada
+            document.getElementById('view-dashboard').classList.add('hidden');
             document.getElementById(viewId).classList.remove('hidden');
-            
-            // Limpiar mensajes antiguos
-            document.querySelectorAll('.mensaje-box').forEach(el => {
-                el.classList.add('hidden');
-                el.innerText = "";
-            });
         }
 
-        async function login() {
-            const user = document.getElementById('login-user').value;
-            const pass = document.getElementById('login-pass').value;
+        async function handleLogin() {
+            const user = document.getElementById('l-user').value;
+            const pass = document.getElementById('l-pass').value;
+            const msg = document.getElementById('msg-login');
 
-            if (!user || !pass) {
-                mostrarMensaje('view-login', "Por favor, completa los campos.", "error");
-                return;
-            }
+            if(!user || !pass) return alert("Completa los campos");
 
             try {
                 const res = await fetch(`${BASE_URL}/login`, {
@@ -99,24 +147,28 @@
                     body: JSON.stringify({user, pass})
                 });
                 const data = await res.json();
-
-                if (data.status === "success") {
-                    showView('view-courses'); // Solo aquí pasamos de página
+                
+                if(data.status === "success") {
+                    document.getElementById('display-user').innerText = user;
+                    showView('view-dashboard');
                 } else {
-                    mostrarMensaje('view-login', data.mensaje, "error");
+                    msg.innerText = data.mensaje;
+                    msg.className = "p-3 rounded-xl text-sm text-center bg-red-500/20 text-red-400 block";
                 }
-            } catch (err) {
-                mostrarMensaje('view-login', "Servidor desconectado. Revisa Railway.", "error");
+            } catch (e) {
+                alert("Error: Revisa si Railway está encendido");
             }
         }
 
-        async function register() {
-            const user = document.getElementById('reg-user').value;
-            const p1 = document.getElementById('reg-pass').value;
-            const p2 = document.getElementById('reg-pass2').value;
+        async function handleRegister() {
+            const user = document.getElementById('r-user').value;
+            const p1 = document.getElementById('r-pass').value;
+            const p2 = document.getElementById('r-pass2').value;
+            const msg = document.getElementById('msg-reg');
 
-            if (p1 !== p2) {
-                mostrarMensaje('view-register', "Las contraseñas no coinciden.", "error");
+            if(p1 !== p2) {
+                msg.innerText = "Las contraseñas no coinciden";
+                msg.className = "p-3 rounded-xl text-sm text-center bg-amber-500/20 text-amber-400 block";
                 return;
             }
 
@@ -127,29 +179,28 @@
                     body: JSON.stringify({user, pass: p1})
                 });
                 const data = await res.json();
-
-                if (data.status === "success") {
-                    mostrarMensaje('view-register', "Cuenta creada con éxito. Redirigiendo...", "success");
+                
+                if(data.status === "success") {
+                    msg.innerText = "¡Cuenta creada con éxito!";
+                    msg.className = "p-3 rounded-xl text-sm text-center bg-green-500/20 text-green-400 block";
                     setTimeout(() => showView('view-login'), 2000);
                 } else {
-                    mostrarMensaje('view-register', data.mensaje, "error");
+                    msg.innerText = data.mensaje;
+                    msg.className = "p-3 rounded-xl text-sm text-center bg-red-500/20 text-red-400 block";
                 }
-            } catch (err) {
-                mostrarMensaje('view-register', "Error de conexión.", "error");
+            } catch (e) {
+                alert("Error de conexión");
             }
         }
 
-        function mostrarMensaje(containerId, texto, tipo) {
-            const container = document.getElementById(containerId);
-            const box = container.querySelector('.mensaje-box');
-            box.innerText = texto;
-            box.classList.remove('hidden');
-            
-            if (tipo === "error") {
-                box.className = "mensaje-box mt-4 p-3 rounded-lg bg-red-900/50 text-red-300 text-sm border border-red-800 block";
-            } else {
-                box.className = "mensaje-box mt-4 p-3 rounded-lg bg-green-900/50 text-green-300 text-sm border border-green-800 block";
-            }
+        function openCourse(title, body) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-body').innerText = body;
+            document.getElementById('course-modal').classList.remove('hidden');
+        }
+
+        function closeCourse() {
+            document.getElementById('course-modal').classList.add('hidden');
         }
     </script>
 </body>
